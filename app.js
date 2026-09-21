@@ -7,6 +7,7 @@ import logger from './src/middleware/logger.middleware.js'
 import memberRouter from './src/routes/members.routes.js'
 import booksRouter from './src/routes/books.routes.js'
 import staffRouter from './src/routes/staff.routes.js'
+import authorRouter from './src/routes/authors.routes.js'
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.use(logger)
 app.use('/members', memberRouter)
 app.use('/books', booksRouter)
 app.use('/staff', staffRouter)
+app.use('/authors', authorRouter)
 
 app.use(errorHandler)
 
