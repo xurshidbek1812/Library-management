@@ -8,6 +8,7 @@ import memberRouter from './src/routes/members.routes.js'
 import booksRouter from './src/routes/books.routes.js'
 import staffRouter from './src/routes/staff.routes.js'
 import authorRouter from './src/routes/authors.routes.js'
+import categoryRouter from './src/routes/categories.routes.js'
 
 const app = express()
 
@@ -20,6 +21,7 @@ app.use('/members', memberRouter)
 app.use('/books', booksRouter)
 app.use('/staff', staffRouter)
 app.use('/authors', authorRouter)
+app.use('/categories', categoryRouter)
 
 app.use(errorHandler)
 
