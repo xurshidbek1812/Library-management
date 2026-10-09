@@ -1,10 +1,17 @@
 import express from 'express'
-import {validateSignupMemberInfo, validateLoginMemberInfo} from '../validators/members.validator.js'
-import {signup, login} from '../controllers/members.controller.js'
+import {validateFilterMember, validateSignupMemberInfo, validateLoginMemberInfo, validatePutMember, validatePatchMember} from '../validators/members.validator.js'
+import {getMembers, getMembersById, signup, login, putMembers, patchMember, activateMember, deleteMember} from '../controllers/members.controller.js'
+import {authorization, requireStaff} from '../middleware/staff.middleware.js'
 
 const router = express.Router()
 
+router.get('/', authorization, requireStaff, validateFilterMember, getMembers)
+router.get('/:id', authorization, requireStaff, getMembersById)
 router.post('/signup', validateSignupMemberInfo, signup)
 router.post('/login', validateLoginMemberInfo, login)
+router.put('/:id', authorization, requireStaff, validatePutMember, putMembers)
+router.patch('/:id', authorization, requireStaff, validatePatchMember, patchMember)
+router.patch('/restore/:id', authorization, requireStaff, activateMember)
+router.delete('/:id', authorization, requireStaff, deleteMember)
 
 export default router

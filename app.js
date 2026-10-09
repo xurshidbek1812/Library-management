@@ -9,6 +9,7 @@ import booksRouter from './src/routes/books.routes.js'
 import staffRouter from './src/routes/staff.routes.js'
 import authorRouter from './src/routes/authors.routes.js'
 import categoryRouter from './src/routes/categories.routes.js'
+import loanRouter from './src/routes/loans.routes.js'
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.use('/books', booksRouter)
 app.use('/staff', staffRouter)
 app.use('/authors', authorRouter)
 app.use('/categories', categoryRouter)
+app.use('/loans', loanRouter)
 
 app.use(errorHandler)
 
