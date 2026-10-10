@@ -30,7 +30,7 @@ export async function createMember(name, email, password, join_date = ''){
         return {status: true, id: create.rows[0].id}
     }
     else{
-        const create = await pool.query('INSERT INTO members (name, email, password, join_date) values ($1, $2, $3) RETURNING id;', [name, email, hashedPassword, join_date])
+        const create = await pool.query('INSERT INTO members (name, email, password, join_date) values ($1, $2, $3, $4) RETURNING id;', [name, email, hashedPassword, join_date])
         return {status: true, id: create.rows[0].id}
     }
 }

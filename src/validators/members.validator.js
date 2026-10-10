@@ -22,7 +22,7 @@ export function validateSignupMemberInfo(req, res, next){
     if(!req.body){
         return res.status(400).json({message: "Nothing is provided"})
     }
-    const {name, email, password} = req.body
+    const {name, email, password, join_date} = req.body
     if(!name || typeof name !== 'string' || name.length < 1){
         return res.status(400).json({message: "Name must be a string"})
     }
@@ -31,6 +31,9 @@ export function validateSignupMemberInfo(req, res, next){
     }
     if(!password || typeof password !== 'string' || password.length < 6){
         return res.status(400).json({message: "Password must be a string and it must contain at least 6 charecters"})
+    }
+    if(join_date && !isValidDate(join_date)){
+        return res.status(400).json({message: "join_date must be a valid string date(YYYY-MM-DD)"})
     }
     next()
 }

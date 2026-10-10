@@ -1,6 +1,6 @@
 export function validateFilterStaff(req, res, next){
     const {role} = req.query
-    if(role && (role !== 'admin' || role !== 'librarian')){
+    if(role && (role !== 'admin' && role !== 'librarian')){
         return res.status(400).json({message: "Role must be either admin or librarian"})
     }
     next()
@@ -21,7 +21,7 @@ export function validateStaffSignUp(req, res, next){
     if(!password || typeof password != 'string' || password.length < 6){
         return res.status(400).json({message: 'Password must be a string with at least 6 charecter'})
     }
-    if(!role || typeof role != 'string' || role !== 'librarian' && role !== 'admin'){
+    if(!role || typeof role != 'string' || (role !== 'librarian' && role !== 'admin')){
         return res.status(400).json({message: 'Role must be either librarian or admin'})
     }
     next()

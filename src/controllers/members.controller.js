@@ -11,12 +11,12 @@ export async function getMembers(req, res, next){
         let values = []
         let index = 1
         if(name){
-            fields.push(`name = $${name}`)
+            fields.push(`name = $${index}`)
             values.push(name)
             index++
         }
         if(join_date){
-            fields.push(`join_date = $${join_date}`)
+            fields.push(`join_date = $${index}`)
             values.push(join_date)
             index++
         }
@@ -25,7 +25,7 @@ export async function getMembers(req, res, next){
             const result = await returnMembers()
             return res.json(result)
         }
-        const result = await returnFilteredMembers(fields.join(' AND '), values.push(id), index)
+        const result = await returnFilteredMembers(fields.join(' AND '), values)
         return res.json(result)
     }
     catch(err){
@@ -101,7 +101,7 @@ export async function borrowBook(req, res, next){
             return res.status(400).json({message: "book_id must be a positive integer"})
         }
         let date = new Date()
-        const borrowed_date = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+        const borrowed_date = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
         date.setUTCDate(date.getUTCDate() + 10);
         const due_date = date.toISOString().split('T')[0];
 

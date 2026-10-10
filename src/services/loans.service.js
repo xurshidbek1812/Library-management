@@ -32,7 +32,7 @@ export async function createLoan(member, book, borrowed_date, due_date){
     if(num_copies.rowCount === 0){
         return {status: false, reason: "book"}
     }
-    if(num_copies.rows[0] === 0){
+    if(num_copies.rows[0].num_copies === 0){
         return {status: false, reason: "not enough"}
     }
     let response
@@ -40,7 +40,7 @@ export async function createLoan(member, book, borrowed_date, due_date){
     try{
         await client.query('BEGIN;')
         await client.query('UPDATE books SET num_copies = num_copies - 1 WHERE id = $1;', [book])
-        response = await pool.query('INSERT INTO loans (member, book, borrowed_date, due_date) VALUES ($1, $2, $3, $4) RETURNING *;', [member, book, borrowed_date, due_date])
+        response = await client.query('INSERT INTO loans (member, book, borrowed_date, due_date) VALUES ($1, $2, $3, $4) RETURNING *;', [member, book, borrowed_date, due_date])
         await client.query('COMMIT;')
     }
     catch(err){
