@@ -28,6 +28,6 @@ app.use('/loans', loanRouter)
 app.use(errorHandler)
 
 const port = process.env.PORT
-app.listen(port, () => {
+app.listen(port || 5000, () => {
     console.log('Server is listening on port ' + port || 5000)
 })

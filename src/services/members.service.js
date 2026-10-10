@@ -36,8 +36,8 @@ export async function createMember(name, email, password, join_date = ''){
 }
 
 export async function loginMember(email, password){
-    const result = await pool.query('SELECT * FROM members WHERE email = $1;', [email])
-    if(result.rows.length > 0){
+    const result = await pool.query('SELECT * FROM members WHERE email = $1 AND status = true;', [email])
+    if(result.rowCount > 0){
         const isMatch = await bcrypt.compare(password, result.rows[0].password)
         if(isMatch){
             return {status: true, id: result.rows[0].id}

@@ -39,14 +39,13 @@ export async function createLoan(member, book, borrowed_date, due_date){
     const client = await pool.connect()
     try{
         await client.query('BEGIN;')
-        await client.query('UPDATE books SET num_copies = num_copies - 1 WHERE id = $1;', [book])
+        await client.query('UPDATE books SET num_copies = num_copies - 1 WHERE id = $1 AND num_copies > 0 AND is_active = true;', [book])
         response = await client.query('INSERT INTO loans (member, book, borrowed_date, due_date) VALUES ($1, $2, $3, $4) RETURNING *;', [member, book, borrowed_date, due_date])
         await client.query('COMMIT;')
     }
     catch(err){
         await client.query('ROLLBACK;')
-        console.error(err)
-        throw new Error(err)
+        throw err
     }
     finally{
         client.release()
@@ -125,7 +124,6 @@ export async function returnBooks(id, return_date){
     }
     catch(err){
         await client.query('ROLLBACK;')
-        console.error(err)
         throw err
     }
     finally{
