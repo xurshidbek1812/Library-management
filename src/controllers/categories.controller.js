@@ -13,7 +13,7 @@ export async function getAllCategories(req, res, next){
 export async function get_categoriesById(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be a number"})
         }
         const result = await getCategoriesById(id)
@@ -51,7 +51,7 @@ export async function put_categories(req, res, next){
         const {name} = req.body
 
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be a number"})
         }
         const result = await putCategories(id, name)
@@ -73,7 +73,7 @@ export async function put_categories(req, res, next){
 export async function restore_categories(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: `Id must be a positive integer`})
         }
 
@@ -101,7 +101,7 @@ export async function restore_categories(req, res, next){
 export async function delCategories(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be a number"})
         }
         const result = await deleteCategories(id)

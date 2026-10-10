@@ -39,7 +39,6 @@ export function requireLibrarian(req, res, next){
 export function requireStaff(req, res, next){
     const role = req.user.role
     if(!role || (role !== 'librarian' && role !== 'admin')){
-        console.log(role)
         return res.status(401).json({message: 'Not allowed'})
     }
     next()

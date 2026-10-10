@@ -56,7 +56,7 @@ export async function getLoans(req, res, next){
 export async function getLoansById(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const result = await returnLoansById(id)
@@ -99,7 +99,7 @@ export async function postLoans(req, res, next){
 export async function putLoans(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be positive integer"})
         }
         const {member, book, borrowed_date, due_date, return_date} = req.body
@@ -134,7 +134,7 @@ export async function patchLoans(req, res, next){
         let index = 1
 
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be a number"})
         }
         const {member, book, borrowed_date, due_date, return_date} = req.body
@@ -204,7 +204,7 @@ export async function patchLoans(req, res, next){
 export async function closeLoans(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const {return_date} = req.body
@@ -231,7 +231,7 @@ export async function closeLoans(req, res, next){
 export async function undoCloseLoans(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id)){
+        if(!Number.isInteger(id)){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const result = await undoReturnBooks(id)
@@ -255,7 +255,7 @@ export async function undoCloseLoans(req, res, next){
 export async function restoreLoans(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const result = await restoreLoan(id)
@@ -282,7 +282,7 @@ export async function restoreLoans(req, res, next){
 export async function deleteLoans(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be a number"})
         }
         const result = await removeLoans(id)

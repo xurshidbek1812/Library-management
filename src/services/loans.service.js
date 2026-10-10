@@ -5,7 +5,12 @@ export async function returnLoans(){
     return response.rows
 }
 
-export async function returnFilteredLoans(fileds, values, index){
+export async function returnLoansByMember(id){
+    const response = await pool.query('SELECT * FROM loans WHERE member = $1;', [id])
+    return response.rows
+}
+
+export async function returnFilteredLoans(fileds, values){
     const response = await pool.query(`SELECT * FROM loans WHERE ${fileds} AND is_active = true;`, values)
     return response.rows
 }
@@ -87,6 +92,14 @@ export async function editPartilLoans(fields, values, index){
         return {status: false}
     }
     return {status: true, updated_loan: response.rows[0]}
+}
+
+export async function checkMember(id){
+    const response = await pool.query('SELECT member FROM loans WHERE id = $1 AND is_active = true;', [id])
+    if(response.rowCount === 0){
+        return {status: false}
+    }
+    return {status: true, member: response.rows[0].member}
 }
 
 export async function returnBooks(id, return_date){

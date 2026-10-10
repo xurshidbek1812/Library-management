@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
 import {returnMembers, returnFilteredMembers, returnMembersById, updateMember, emailExists, updatePartiallyMember, restoreMember, removeMember, createMember, loginMember} from '../services/members.service.js'
+import {createLoan, returnBooks, checkMember, returnLoansByMember} from '../services/loans.service.js'
 
 export async function getMembers(req, res, next){
     try{
@@ -32,10 +33,17 @@ export async function getMembers(req, res, next){
     }
 }
 
+export async function getMemberLoans(req, res, next){
+    const user_id = req.user.userId
+    const result = await returnLoansByMember(user_id)
+    return res.json(result)
+    
+}
+
 export async function getMembersById(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id < 1){
+        if(!Number.isInteger(id) || id < 1){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const result = await returnMembersById(id)
@@ -82,11 +90,85 @@ export async function login(req, res, next){
     }
 }
 
+export async function borrowBook(req, res, next){
+    try{
+        const book_id = Number(req.params.book_id)
+        if(!Number.isInteger(book_id) || book_id < 1){
+            return res.status(400).json({message: "book_id must be a positive integer"})
+        }
+        const member_id = req.user.userId
+        if(!Number.isInteger(member_id) || member_id < 1){
+            return res.status(400).json({message: "book_id must be a positive integer"})
+        }
+        let date = new Date()
+        const borrowed_date = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+        date.setUTCDate(date.getUTCDate() + 10);
+        const due_date = date.toISOString().split('T')[0];
+
+        const result = await createLoan(member_id, book_id, borrowed_date, due_date)
+
+        if(result.status){
+            return res.json({message: "Book successfully borrowed", loan: result.new_loan})
+        }
+
+        if(result.reason == 'book')
+            return res.status(400).json({message: `Book with id ${book_id} doesn't exist`})
+        if(result.reason == 'member')
+            return res.status(400).json({message: `Member with id ${member_id} doesn't exist`})
+        if(result.reason == 'not enough')
+            return res.status(400).json({message: "Not enough number of copies"})
+        if(result.reason == 'error'){
+            return res.status(500).json({message: "Could not create new loan"})
+        }
+        return next(`Unhandled borrowBook reason ${result.reason}`)
+    }
+    catch(err){
+        next(err)
+    }
+}
+
+export async function returnBook(req, res, next){
+    try{
+        const id = Number(req.params.id)
+        if(Number.isNaN(id) || id < 1){
+            return res.status(400).json({message: "Loan id must be a positive integer"})
+        }
+
+        const user = req.user.userId
+
+        const userCheck = await checkMember(id)
+        if(!userCheck.status){
+            return res.status(400).json({message: `Loan with id ${id} doesn't exist`})
+        }
+        else if(user !== userCheck.member){
+            return res.status(401).json({message: "You cannot close loans of other members"})
+        }
+
+        const result = await returnBooks(id, new Date())
+        if(result.status){
+            return res.json({message: `Loan successfully closed`, closed_loan: result.closed_loan})
+        }
+
+        if(result.reason == 'loan not found'){
+            return res.status(400).json({message: `Loan with id ${id} not found`})
+        }
+        if(result.reason == 'book not found'){
+            return res.status(400).json({message: `Borrowed book not found`})
+        }
+        if(result.reason == 'already closed'){
+            return res.status(409).json({message: `Somebody just closed this loan`})
+        }
+    }
+    catch(err){
+        next(err)
+    }
+}
+
 export async function putMembers(req, res, next){
     try{
         const {name, email, password, join_date} = req.body
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id < 1){
+        if(!Number.isInteger(id) || id < 1){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
 
@@ -122,7 +204,7 @@ export async function patchMember(req, res, next){
         const {name, email, password, join_date} = req.body
         const id = Number(req.params.id)
 
-        if(Number.isNaN(id) || id < 1){
+        if(!Number.isInteger(id) || id < 1){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
 
@@ -182,7 +264,7 @@ export async function patchMember(req, res, next){
 export async function activateMember(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id < 1){
+        if(!Number.isInteger(id) || id < 1){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const result = await restoreMember(id)
@@ -208,7 +290,7 @@ export async function activateMember(req, res, next){
 export async function deleteMember(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id < 1){
+        if(!Number.isInteger(id) || id < 1){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
 

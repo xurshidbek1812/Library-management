@@ -23,7 +23,7 @@ export async function getAuthorById(req, res, next){
     try{
 
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: 'Id must be a positive number'})
         }
         const result = await getAuthor(id)
@@ -56,7 +56,7 @@ export async function editAuthor(req, res, next){
     try{
         const {name, bio, nationality} = req.body
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be a positive number"})
         }
         const result = await putAuthor(id, name, bio, nationality)
@@ -76,7 +76,7 @@ export async function editPartiallyAuthor(req, res, next){
         let values = []
         let index = 1
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: 'Id must be a positive number'})
         }
 
@@ -113,7 +113,7 @@ export async function editPartiallyAuthor(req, res, next){
 export async function restoreAuthors(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const result = await restoreAuthor(id)
@@ -136,7 +136,7 @@ export async function restoreAuthors(req, res, next){
 export async function delAuthor(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: 'Id must be a positive number'})
         }
         const result = await deleteAuthor(id)

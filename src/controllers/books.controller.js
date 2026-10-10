@@ -34,7 +34,7 @@ export async function getBooks(req, res, next){
 export async function BooksById(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "ID must be a positive integer"})
         }
         const result = await getBooksById(Number(id))
@@ -78,7 +78,7 @@ export async function putBooks(req, res, next){
     try{
         const {isbn, title, published_year, price, num_copies, auth, category} = req.body
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "ID must be a positive integer"})
         }
         const result = await editBooks(id, isbn, title, published_year, price, num_copies, auth, category)
@@ -123,7 +123,7 @@ export async function patchBooks(req, res, next){
 
         const {isbn, title, published_year, price, num_copies, auth, category} = req.body
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "ID must be a positive integer"})
         }
 
@@ -199,7 +199,7 @@ export async function patchBooks(req, res, next){
 export async function restoreBooks(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: `Id must be a positive integer`})
         }
 
@@ -227,7 +227,7 @@ export async function restoreBooks(req, res, next){
 export async function delBooks(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id <= 0){
+        if(!Number.isInteger(id) || id <= 0){
             return res.status(400).json({message: "ID must be a positive integer"})
         }
         const result = await deleteBooks(id)

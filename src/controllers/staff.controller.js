@@ -20,7 +20,7 @@ export async function getStaff(req, res, next){
 export async function getStaffById(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id < 1){
+        if(!Number.isInteger(id) || id < 1){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const result = await returnStaffById(id)
@@ -86,7 +86,7 @@ export async function StaffLogIn(req, res, next){
 export async function StaffPut(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id < 1){
+        if(!Number.isInteger(id) || id < 1){
             return res.status(400).json({message: "Id must be a positive number"})
         }
         const {name, email, password, role} = req.body
@@ -116,7 +116,7 @@ export async function StaffPut(req, res, next){
 export async function StaffPatch(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id < 1){
+        if(!Number.isInteger(id) || id < 1){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const {name, email, password, role} = req.body
@@ -170,7 +170,7 @@ export async function StaffPatch(req, res, next){
 export async function restoreStaffUsers(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id < 1){
+        if(!Number.isInteger(id) || id < 1){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const result = await restoreStaff(id)
@@ -197,7 +197,7 @@ export async function restoreStaffUsers(req, res, next){
 export async function deleteStaff(req, res, next){
     try{
         const id = Number(req.params.id)
-        if(Number.isNaN(id) || id < 1){
+        if(!Number.isInteger(id) || id < 1){
             return res.status(400).json({message: "Id must be a positive integer"})
         }
         const result = await removeStaff(id)
