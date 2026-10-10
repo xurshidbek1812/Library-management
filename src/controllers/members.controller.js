@@ -117,6 +117,12 @@ export async function borrowBook(req, res, next){
             return res.status(400).json({message: `Member with id ${member_id} doesn't exist`})
         if(result.reason == 'not enough')
             return res.status(400).json({message: "Not enough number of copies"})
+        if(result.reason === 'loan create'){
+            return res.status(500).json({message: "Could not create a loan"})
+        }
+        if(result.reason == 'error'){
+            return res.status(500).json({message: "Could not create new loan"})
+        }
         if(result.reason == 'error'){
             return res.status(500).json({message: "Could not create new loan"})
         }
