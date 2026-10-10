@@ -85,6 +85,12 @@ export async function postLoans(req, res, next){
             return res.status(400).json({message: `Member with id ${member} doesn't exist`})
         if(result.reason == 'not enough')
             return res.status(400).json({message: "Not enough number of copies"})
+        if(result.reason === 'book update'){
+            return res.status(500).json({message: "Could not decriment the book"})
+        }
+        if(result.reason === 'loan create'){
+            return res.status(500).json({message: "Could not create a loan"})
+        }
         if(result.reason == 'error'){
             return res.status(500).json({message: "Could not create new loan"})
         }
